@@ -1,0 +1,5 @@
+<div className="min-h-screen bg-gradient-to-r from-[#0B0B45] to-[#1E3ECF] relative overflow-hidden">
+  <div className="absolute top-20 left-20 w-72 h-72 bg-yellow-400 opacity-20 blur-3xl rounded-full"></div>
+  <div className="absolute bottom-20 right-20 w-80 h-80 bg-blue-400 opacity-20 blur-3xl rounded-full"></div>
+  {/* Content here */}
+</div>
