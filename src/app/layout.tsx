@@ -15,16 +15,16 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Jamm App",
   description: "Jamm App Landing Page",
-  manifest: "/svg 3.png",
+  manifest: "/jammLetter.png",
   openGraph: {
     title: "Jamm App",
     description: "Jamm App Landing Page",
     url: "https://www.jamm.company/",
     images: [
       {
-        url: "https://www.jamm.company/svg%203.png",
+        url: "https://www.jamm.company/jammLetter.png",
         width: 1200,
-        height: 630,
+        height: 1200,
         alt: "Jamm App Preview",
       },
     ],
