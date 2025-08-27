@@ -153,7 +153,7 @@ export default function Home() {
             <CalendarRange className="h-4 w-4 text-black dark:text-neutral-400" />
           }
           title="Our Solution"
-          description="Jamm analyze schedules and recommends the best times for group prayers."
+          description="Jamm analyze class schedules and recommends the best times for group prayers."
         />
 
         <GridItem
