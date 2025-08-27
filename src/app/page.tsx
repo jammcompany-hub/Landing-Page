@@ -153,7 +153,7 @@ export default function Home() {
             <CalendarRange className="h-4 w-4 text-black dark:text-neutral-400" />
           }
           title="Our Solution"
-          description="Jamm analyze schedules and recommedns the best times for group prayers."
+          description="Jamm analyze schedules and recommends the best times for group prayers."
         />
 
         <GridItem
@@ -185,8 +185,32 @@ export default function Home() {
         />
       </div>
 
-      <div className="mt-10">
+      {/* <div className="mt-10">
         <SignupFormDemo />
+      </div> */}
+
+      <div className="max-w-2xl mx-auto p-4 mt-10 mb-20">
+        <div className="relative rounded-2xl bg-white/5 backdrop-blur-md border border-[#2D2D2D] shadow-lg p-8">
+          {/* Soft glowing accent */}
+          <div className="absolute -top-8 -left-8 w-32 h-32 bg-[#FFE066] opacity-20 blur-2xl rounded-full pointer-events-none"></div>
+          <h1 className="relative z-10 text-3xl md:text-6xl font-bold text-center bg-gradient-to-b from-[#FFE066] via-white to-[#1E3ECF] bg-clip-text text-transparent font-sans drop-shadow-lg">
+            Join the waitlist
+          </h1>
+          <p className="text-neutral-300 max-w-lg mx-auto my-4 text-base text-center relative z-10">
+            Be the first to experience{" "}
+            <span className="text-[#FFE066] font-semibold">Jamm</span> — the
+            easiest way to coordinate group prayers and build community. Sign up to get beta access, and receive launch updates. No
+            spam, just occasional updates.
+          </p>
+          <input
+            type="email"
+            placeholder="your@email.com"
+            className="rounded-lg border border-[#FFE066] focus:ring-2 focus:ring-[#FFE066] w-full mt-4 bg-[#0B0B45]/80 text-white placeholder:text-neutral-400 px-4 py-3 transition-shadow focus:shadow-[0_0_0_2px_#FFE06655]"
+          />
+          <button className="mt-4 w-full rounded-lg bg-gradient-to-r from-[#FFE066] to-[#1E3ECF] text-[#0B0B45] font-bold py-3 shadow-md hover:from-[#FFF6B0] hover:to-[#3B5BDB] transition">
+            Notify Me
+          </button>
+        </div>
       </div>
     </div>
   );
