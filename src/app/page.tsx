@@ -25,7 +25,7 @@ export default function Home() {
       quote:
         "This app has transformed the way we coordinate our prayers. It's user-friendly and efficient.",
       name: "Shah Qureshi",
-      designation: "Co-founder of Jamm App, Graduate from CCSU",
+      designation: "Co-founder of Jamm App, Bachelor's in Computer Science",
       src: "/shahpic.jpg",
     },
     {
