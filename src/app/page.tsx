@@ -97,9 +97,9 @@ export default function Home() {
             <div className="relative flex flex-1 flex-col justify-between gap-3">
               <div className="w-fit rounded-lg border border-gray-600 p-2">
                 {/* Icon in white */}
-                {React.cloneElement(icon as React.ReactElement<any>, {
+                {React.cloneElement(icon, {
                   className: "h-4 w-4 text-white",
-                })} 
+                } as React.HTMLAttributes<HTMLElement>)} 
               </div>
               <div className="space-y-3">
                 {/* Title in gold */}
