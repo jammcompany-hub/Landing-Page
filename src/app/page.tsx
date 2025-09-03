@@ -1,12 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import SignupFormDemo from "@/components/signup-form-demo";
 import { FlipWords } from "@/components/ui/flip-words";
 import { AnimatedTestimonials } from "@/components/ui/animated-testimonials";
-import { Box, CalendarRange, Clock, Globe2, GraduationCap, Lock, Search, Settings, Sparkles } from "lucide-react";
+import { CalendarRange, Clock, Globe2, GraduationCap } from "lucide-react";
 import { GlowingEffect } from "@/components/ui/glowing-effect";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { InfiniteMovingCards } from "@/components/ui/infinite-moving-cards";
 
 
@@ -44,7 +43,7 @@ export default function Home() {
         setSubmitStatus("error");
         setSubmitMessage(data.message);
       }
-    } catch (error) {
+    } catch {
       setSubmitStatus("error");
       setSubmitMessage("Something went wrong. Please try again.");
     } finally {

@@ -1,5 +1,4 @@
 import nodemailer from 'nodemailer';
-import { WaitlistEntry } from './database';
 
 // Email configuration
 const transporter = nodemailer.createTransport({

@@ -73,7 +73,7 @@ export default function AdminPage() {
         setSubject('');
         setHtmlContent('');
       }
-    } catch (error) {
+    } catch {
       setResult({
         success: false,
         message: 'Failed to send email. Please try again.'

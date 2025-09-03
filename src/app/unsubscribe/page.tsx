@@ -8,14 +8,13 @@ export default function UnsubscribePage() {
   const [email, setEmail] = useState('');
   const [isUnsubscribing, setIsUnsubscribing] = useState(false);
   const [result, setResult] = useState<{ success: boolean; message: string } | null>(null);
-  const [urlEmail, setUrlEmail] = useState('');
+
 
   // Check for email in URL params
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const emailParam = urlParams.get('email');
     if (emailParam) {
-      setUrlEmail(emailParam);
       setEmail(emailParam);
     }
   }, []);
@@ -38,7 +37,7 @@ export default function UnsubscribePage() {
 
       const data = await response.json();
       setResult(data);
-    } catch (error) {
+    } catch {
       setResult({
         success: false,
         message: 'Something went wrong. Please try again.'
@@ -62,9 +61,9 @@ export default function UnsubscribePage() {
             </Link>
             <Mail className="h-12 w-12 text-[#FFE066] mx-auto mb-4" />
             <h1 className="text-2xl font-bold text-white mb-2">Unsubscribe</h1>
-            <p className="text-white/70 text-sm">
-              We're sorry to see you go! Enter your email to unsubscribe from Jamm updates.
-            </p>
+                          <p className="text-white/70 text-sm">
+                We&apos;re sorry to see you go! Enter your email to unsubscribe from Jamm updates.
+              </p>
           </div>
 
           {!result ? (

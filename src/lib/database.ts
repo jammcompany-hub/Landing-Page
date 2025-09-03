@@ -27,7 +27,7 @@ export async function getWaitlistEntries(): Promise<WaitlistEntry[]> {
     await ensureDataDir();
     const data = await fs.readFile(DATA_FILE, 'utf-8');
     return JSON.parse(data);
-  } catch (error) {
+  } catch {
     // File doesn't exist or is empty, return empty array
     return [];
   }
