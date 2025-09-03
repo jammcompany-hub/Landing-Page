@@ -12,6 +12,45 @@ import { InfiniteMovingCards } from "@/components/ui/infinite-moving-cards";
 
 export default function Home() {
   const words = ["Time.", "Community."];
+  const [email, setEmail] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState("");
+  const [submitStatus, setSubmitStatus] = useState<"success" | "error" | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email || isSubmitting) return;
+
+    setIsSubmitting(true);
+    setSubmitMessage("");
+    setSubmitStatus(null);
+
+    try {
+      const response = await fetch('/api/waitlist', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setSubmitStatus("success");
+        setSubmitMessage(data.message);
+        setEmail(""); // Clear the form
+      } else {
+        setSubmitStatus("error");
+        setSubmitMessage(data.message);
+      }
+    } catch (error) {
+      setSubmitStatus("error");
+      setSubmitMessage("Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const meetTheTeam = [
     {
@@ -202,14 +241,36 @@ export default function Home() {
             easiest way to coordinate group prayers and build community. Sign up to get beta access, and receive launch updates. No
             spam, just occasional updates.
           </p>
-          <input
-            type="email"
-            placeholder="your@email.com"
-            className="rounded-lg border border-[#FFE066] focus:ring-2 focus:ring-[#FFE066] w-full mt-4 bg-[#0B0B45]/80 text-white placeholder:text-neutral-400 px-4 py-3 transition-shadow focus:shadow-[0_0_0_2px_#FFE06655]"
-          />
-          <button className="mt-4 w-full rounded-lg bg-gradient-to-r from-[#FFE066] to-[#1E3ECF] text-[#0B0B45] font-bold py-3 shadow-md hover:from-[#FFF6B0] hover:to-[#3B5BDB] transition">
-            Notify Me
-          </button>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <input
+              type="email"
+              placeholder="your@email.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              disabled={isSubmitting}
+              className="rounded-lg border border-[#FFE066] focus:ring-2 focus:ring-[#FFE066] w-full mt-4 bg-[#0B0B45]/80 text-white placeholder:text-neutral-400 px-4 py-3 transition-shadow focus:shadow-[0_0_0_2px_#FFE06655] disabled:opacity-50 disabled:cursor-not-allowed"
+            />
+            <button 
+              type="submit"
+              disabled={isSubmitting || !email}
+              className="mt-4 w-full rounded-lg bg-gradient-to-r from-[#FFE066] to-[#1E3ECF] text-[#0B0B45] font-bold py-3 shadow-md hover:from-[#FFF6B0] hover:to-[#3B5BDB] transition disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isSubmitting ? "Joining..." : "Notify Me"}
+            </button>
+            
+            {submitMessage && (
+              <div className={`text-center text-sm font-medium ${
+                submitStatus === "success" 
+                  ? "text-green-400" 
+                  : submitStatus === "error" 
+                    ? "text-red-400" 
+                    : "text-neutral-300"
+              }`}>
+                {submitMessage}
+              </div>
+            )}
+          </form>
         </div>
       </div>
     </div>
