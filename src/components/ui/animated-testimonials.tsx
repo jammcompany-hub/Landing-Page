@@ -3,7 +3,7 @@
 import { IconArrowLeft, IconArrowRight } from "@tabler/icons-react";
 import { motion, AnimatePresence } from "motion/react";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 type Testimonial = {
   quote: string;
@@ -19,6 +19,25 @@ export const AnimatedTestimonials = ({
   autoplay?: boolean;
 }) => {
   const [active, setActive] = useState(0);
+
+  // Deterministic rotation values to avoid SSR/client hydration mismatches
+  const hashStringToRange = (input: string, min: number, max: number): number => {
+    let hash = 0;
+    for (let i = 0; i < input.length; i++) {
+      hash = (hash * 31 + input.charCodeAt(i)) | 0;
+    }
+    const range = max - min + 1;
+    const value = (hash >>> 0) % range;
+    return min + value;
+  };
+
+  const baseRotations = useMemo(
+    () =>
+      testimonials.map((t, idx) =>
+        hashStringToRange(`${t.src}|${t.name}|${t.designation}|${idx}`, -10, 10)
+      ),
+    [testimonials]
+  );
 
   const handleNext = useCallback(() => {
     setActive((prev) => (prev + 1) % testimonials.length);
@@ -39,9 +58,6 @@ export const AnimatedTestimonials = ({
     }
   }, [autoplay, handleNext]);
 
-  const randomRotateY = () => {
-    return Math.floor(Math.random() * 21) - 10;
-  };
   return (
     <div className="mx-auto max-w-sm px-4 py-20 font-sans antialiased md:max-w-4xl md:px-8 lg:px-12 text-white">
       <div className="relative grid grid-cols-1 gap-20 md:grid-cols-2">
@@ -55,13 +71,13 @@ export const AnimatedTestimonials = ({
                     opacity: 0,
                     scale: 0.9,
                     z: -100,
-                    rotate: randomRotateY(),
+                    rotate: baseRotations[index],
                   }}
                   animate={{
                     opacity: isActive(index) ? 1 : 0.7,
                     scale: isActive(index) ? 1 : 0.95,
                     z: isActive(index) ? 0 : -100,
-                    rotate: isActive(index) ? 0 : randomRotateY(),
+                    rotate: isActive(index) ? 0 : baseRotations[index],
                     zIndex: isActive(index)
                       ? 40
                       : testimonials.length + 2 - index,
@@ -71,7 +87,7 @@ export const AnimatedTestimonials = ({
                     opacity: 0,
                     scale: 0.9,
                     z: 100,
-                    rotate: randomRotateY(),
+                    rotate: baseRotations[index],
                   }}
                   transition={{
                     duration: 0.4,
