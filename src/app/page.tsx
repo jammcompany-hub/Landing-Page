@@ -71,7 +71,7 @@ export default function Home() {
         "As a student, Jamm has made it incredibly easy to find prayer times that fit my busy schedule.",
       name: "Kareem Ghonaim",
       designation: "Co-founder of Jamm App, M.S. in Computer Science",
-      src: "https://images.unsplash.com/photo-1623582854588-d60de57fa33f?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      src: "/kareempic.jpeg",
     },
   ];
 
