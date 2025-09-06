@@ -20,21 +20,37 @@ export default function AdminPage() {
     }
   }, [isAuthenticated]);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === process.env.NEXT_PUBLIC_ADMIN_TOKEN) {
-      setIsAuthenticated(true);
-      setAuthError('');
-    } else {
-      setAuthError('Invalid password');
+    try {
+      const response = await fetch('/api/admin/verify', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ password }),
+      });
+      
+      const data = await response.json();
+      if (data.success) {
+        setIsAuthenticated(true);
+        setAuthError('');
+        // Store auth token in sessionStorage for subsequent requests
+        sessionStorage.setItem('adminToken', data.token);
+      } else {
+        setAuthError('Invalid password');
+      }
+    } catch (error) {
+      setAuthError('Login failed. Please try again.');
     }
   };
 
   const fetchSubscriberCount = async () => {
     try {
+      const adminToken = sessionStorage.getItem('adminToken');
       const response = await fetch('/api/waitlist', {
         headers: {
-          'Authorization': `Bearer ${process.env.NEXT_PUBLIC_ADMIN_TOKEN}`
+          'Authorization': `Bearer ${adminToken}`
         }
       });
       const data = await response.json();
@@ -54,11 +70,12 @@ export default function AdminPage() {
     setResult(null);
 
     try {
+      const adminToken = sessionStorage.getItem('adminToken');
       const response = await fetch('/api/admin/send-email', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.NEXT_PUBLIC_ADMIN_TOKEN || 'your-admin-token'}`,
+          'Authorization': `Bearer ${adminToken}`,
         },
         body: JSON.stringify({
           subject,

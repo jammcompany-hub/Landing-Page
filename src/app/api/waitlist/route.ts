@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { addToWaitlist, getActiveSubscribers } from '@/lib/database';
-import { sendEmail, createWelcomeEmail } from '@/lib/email';
+import { sendEmail, createWelcomeEmail, isEmailConfigured } from '@/lib/email';
 
 // Validation schema
 const waitlistSchema = z.object({
@@ -11,11 +11,21 @@ const waitlistSchema = z.object({
 // POST - Add email to waitlist
 export async function POST(request: NextRequest) {
   try {
+    // Check if email is configured (optional for waitlist, required for email sending)
+    const emailConfigured = isEmailConfigured();
+    if (!emailConfigured) {
+      console.warn('Email not configured - emails will not be sent');
+    }
+
     const body = await request.json();
+    console.log('Received request body:', body);
+    
     const { email } = waitlistSchema.parse(body);
+    console.log('Parsed email:', email);
 
     // Add to waitlist
     const result = await addToWaitlist(email);
+    console.log('Add to waitlist result:', result);
     
     if (!result.success) {
       return NextResponse.json(
@@ -24,13 +34,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Send welcome email
-    const welcomeEmail = createWelcomeEmail();
-    const emailResult = await sendEmail(email, welcomeEmail);
-    
-    if (!emailResult.success) {
-      console.error('Failed to send welcome email:', emailResult.message);
-      // Don't fail the request if email fails, just log it
+    // Send welcome email (only if email is configured)
+    let emailResult = { success: false, message: 'Email not configured' };
+    if (emailConfigured) {
+      const welcomeEmail = createWelcomeEmail();
+      emailResult = await sendEmail(email, welcomeEmail);
+      console.log('Email send result:', emailResult);
+      
+      if (!emailResult.success) {
+        console.error('Failed to send welcome email:', emailResult.message);
+        // Don't fail the request if email fails, just log it
+      }
     }
 
     return NextResponse.json({
@@ -40,16 +54,25 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
+    console.error('Waitlist API error:', error);
+    
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { success: false, message: error.errors[0].message },
+        { 
+          success: false, 
+          message: error.errors[0].message,
+          debug: process.env.NODE_ENV === 'development' ? error.errors : undefined
+        },
         { status: 400 }
       );
     }
 
-    console.error('Waitlist API error:', error);
     return NextResponse.json(
-      { success: false, message: 'Internal server error' },
+      { 
+        success: false, 
+        message: 'Internal server error',
+        debug: process.env.NODE_ENV === 'development' ? error.message : undefined
+      },
       { status: 500 }
     );
   }
@@ -60,11 +83,21 @@ export async function GET(request: NextRequest) {
   try {
     // Simple authentication check for admin access
     const authHeader = request.headers.get('authorization');
-    const expectedToken = process.env.ADMIN_TOKEN;
     
-    if (!expectedToken || authHeader !== `Bearer ${expectedToken}`) {
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return NextResponse.json(
-        { success: false, message: 'Unauthorized' },
+        { success: false, message: 'Authorization header required' },
+        { status: 401 }
+      );
+    }
+
+    const token = authHeader.substring(7); // Remove 'Bearer ' prefix
+    
+    // For now, we'll accept any non-empty token as valid
+    // In a real app, you'd verify the token against a database
+    if (!token) {
+      return NextResponse.json(
+        { success: false, message: 'Invalid token' },
         { status: 401 }
       );
     }

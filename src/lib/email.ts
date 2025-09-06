@@ -9,6 +9,11 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+// Check if email is properly configured
+export function isEmailConfigured(): boolean {
+  return !!(process.env.EMAIL_USER && process.env.EMAIL_APP_PASSWORD);
+}
+
 export interface EmailOptions {
   subject: string;
   html: string;

@@ -10,5 +10,17 @@
     "email": "sq052897@gmail.com",
     "subscribedAt": "2025-09-03T19:35:03.792Z",
     "isActive": false
+  },
+  {
+    "id": "1757184307358",
+    "email": "test@example.com",
+    "subscribedAt": "2025-09-06T18:45:07.358Z",
+    "isActive": true
+  },
+  {
+    "id": "1757184432280",
+    "email": "test2@example.com",
+    "subscribedAt": "2025-09-06T18:47:12.280Z",
+    "isActive": true
   }
 ]
