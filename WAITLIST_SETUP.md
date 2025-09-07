@@ -134,6 +134,26 @@ The system uses a simple JSON file (`data/waitlist.json`) for storage. Each entr
 3. Update `NEXT_PUBLIC_BASE_URL` to your production domain
 4. Test the email functionality
 
+## ☁️ Optional: Use Firebase Firestore for Cloud Storage
+
+You can store waitlist emails in Firebase instead of the local JSON file. When these variables are present, the API will use Firestore automatically and fall back to the JSON file locally if they are missing.
+
+1) Create a Service Account in the Firebase Console → Project Settings → Service Accounts → Generate new private key
+
+2) Add the following to `.env.local` or your Vercel environment:
+
+```
+FIREBASE_PROJECT_ID=your-project-id
+FIREBASE_CLIENT_EMAIL=firebase-adminsdk-xxxxx@your-project-id.iam.gserviceaccount.com
+# Keep this on one line with \n for newlines if your platform requires it
+FIREBASE_PRIVATE_KEY=-----BEGIN PRIVATE KEY-----\nMIIE...\n-----END PRIVATE KEY-----\n
+```
+
+Notes:
+- The code accepts both real newlines and the `\n`-escaped format.
+- Firestore collection: `waitlist` with document id = the lowercase email.
+- Admin SDK is used server-side only; no client credentials are exposed.
+
 ## 🔧 Troubleshooting
 
 ### Emails not sending
