@@ -13,13 +13,12 @@ export function isFirestoreConfigured(): boolean {
 
 export function getServerFirestore(): Firestore | null {
   if (!isFirestoreConfigured()) {
-    if (process.env.NODE_ENV !== 'production') {
-      console.warn('Firestore not configured: missing envs', {
-        hasProjectId: Boolean(process.env.FIREBASE_PROJECT_ID),
-        hasClientEmail: Boolean(process.env.FIREBASE_CLIENT_EMAIL),
-        hasPrivateKey: Boolean(process.env.FIREBASE_PRIVATE_KEY),
-      });
-    }
+    console.warn('Firestore not configured: missing envs', {
+      hasProjectId: Boolean(process.env.FIREBASE_PROJECT_ID),
+      hasClientEmail: Boolean(process.env.FIREBASE_CLIENT_EMAIL),
+      hasPrivateKey: Boolean(process.env.FIREBASE_PRIVATE_KEY),
+      nodeEnv: process.env.NODE_ENV,
+    });
     return null;
   }
 
