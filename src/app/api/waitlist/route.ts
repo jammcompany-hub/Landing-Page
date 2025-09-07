@@ -67,11 +67,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const debugInfo = process.env.NODE_ENV === 'development'
+      ? (error instanceof Error ? error.message : JSON.stringify(error))
+      : undefined;
+
     return NextResponse.json(
       { 
         success: false, 
         message: 'Internal server error',
-        debug: process.env.NODE_ENV === 'development' ? error.message : undefined
+        debug: debugInfo
       },
       { status: 500 }
     );
