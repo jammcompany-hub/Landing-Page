@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+export const runtime = 'nodejs';
 import { z } from 'zod';
 import { addToWaitlist, getActiveSubscribers } from '@/lib/database';
 import { sendEmail, createWelcomeEmail, isEmailConfigured } from '@/lib/email';

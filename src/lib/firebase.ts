@@ -13,6 +13,13 @@ export function isFirestoreConfigured(): boolean {
 
 export function getServerFirestore(): Firestore | null {
   if (!isFirestoreConfigured()) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn('Firestore not configured: missing envs', {
+        hasProjectId: Boolean(process.env.FIREBASE_PROJECT_ID),
+        hasClientEmail: Boolean(process.env.FIREBASE_CLIENT_EMAIL),
+        hasPrivateKey: Boolean(process.env.FIREBASE_PRIVATE_KEY),
+      });
+    }
     return null;
   }
 
@@ -28,14 +35,18 @@ export function getServerFirestore(): Firestore | null {
     ? privateKeyRaw.replace(/\\n/g, '\n')
     : privateKeyRaw;
 
-  if (getApps().length === 0) {
-    initializeApp({
-      credential: cert({ projectId, clientEmail, privateKey }),
-    });
+  try {
+    if (getApps().length === 0) {
+      initializeApp({
+        credential: cert({ projectId, clientEmail, privateKey }),
+      });
+    }
+    cachedDb = getFirestore();
+    return cachedDb;
+  } catch (err) {
+    console.error('Failed to initialize Firebase Admin/Firestore', err);
+    return null;
   }
-
-  cachedDb = getFirestore();
-  return cachedDb;
 }
 
 
