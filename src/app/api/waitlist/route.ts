@@ -7,6 +7,7 @@ import { sendEmail, createWelcomeEmail, isEmailConfigured } from '@/lib/email';
 // Validation schema
 const waitlistSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
+  school: z.string().min(1, 'School is required'),
 });
 
 // POST - Add email to waitlist
@@ -21,11 +22,11 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     console.log('Received request body:', body);
     
-    const { email } = waitlistSchema.parse(body);
-    console.log('Parsed email:', email);
+    const { email, school } = waitlistSchema.parse(body);
+    console.log('Parsed email:', email, 'school:', school);
 
     // Add to waitlist
-    const result = await addToWaitlist(email);
+    const result = await addToWaitlist(email, school);
     console.log('Add to waitlist result:', result);
     
     if (!result.success) {
@@ -115,7 +116,8 @@ export async function GET(request: NextRequest) {
       subscribers: subscribers.map(sub => ({
         id: sub.id,
         email: sub.email,
-        subscribedAt: sub.subscribedAt
+        subscribedAt: sub.subscribedAt,
+        school: sub.school
       }))
     });
   } catch (error) {
