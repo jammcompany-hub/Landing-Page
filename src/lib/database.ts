@@ -7,6 +7,7 @@ export interface WaitlistEntry {
   email: string;
   subscribedAt: string;
   isActive: boolean;
+  school: string;
 }
 
 // Use a more reliable path for Next.js
@@ -34,6 +35,7 @@ export async function getWaitlistEntries(): Promise<WaitlistEntry[]> {
         email: String(d.email ?? ''),
         subscribedAt: String(d.subscribedAt ?? new Date().toISOString()),
         isActive: Boolean(d.isActive ?? true),
+        school: String(d.school ?? ''),
       } as WaitlistEntry;
     });
   }
@@ -49,8 +51,9 @@ export async function getWaitlistEntries(): Promise<WaitlistEntry[]> {
 }
 
 // Add email to waitlist
-export async function addToWaitlist(email: string): Promise<{ success: boolean; message: string }> {
+export async function addToWaitlist(email: string, school: string): Promise<{ success: boolean; message: string }> {
   const normalizedEmail = email.toLowerCase();
+  const normalizedSchool = school.toLowerCase();
   const db = getServerFirestore();
 
   try {
@@ -62,9 +65,9 @@ export async function addToWaitlist(email: string): Promise<{ success: boolean; 
         if (data.isActive) {
           return { success: false, message: 'Email is already on the waitlist' };
         }
-        await docRef.update({ isActive: true, subscribedAt: new Date().toISOString(), email: normalizedEmail });
+        await docRef.update({ isActive: true, subscribedAt: new Date().toISOString(), email: normalizedEmail, school: normalizedSchool });
       } else {
-        await docRef.set({ email: normalizedEmail, subscribedAt: new Date().toISOString(), isActive: true });
+        await docRef.set({ email: normalizedEmail, school: normalizedSchool, subscribedAt: new Date().toISOString(), isActive: true });
       }
       return { success: true, message: 'Successfully added to waitlist!' };
     }
@@ -78,6 +81,7 @@ export async function addToWaitlist(email: string): Promise<{ success: boolean; 
       } else {
         existingEntry.isActive = true;
         existingEntry.subscribedAt = new Date().toISOString();
+        existingEntry.school = normalizedSchool;
       }
     } else {
       const newEntry: WaitlistEntry = {
@@ -85,6 +89,7 @@ export async function addToWaitlist(email: string): Promise<{ success: boolean; 
         email: normalizedEmail,
         subscribedAt: new Date().toISOString(),
         isActive: true,
+        school: normalizedSchool,
       };
       entries.push(newEntry);
     }
@@ -108,6 +113,7 @@ export async function getActiveSubscribers(): Promise<WaitlistEntry[]> {
         email: String(d.email ?? ''),
         subscribedAt: String(d.subscribedAt ?? new Date().toISOString()),
         isActive: Boolean(d.isActive ?? true),
+        school: String(d.school ?? ''),
       } as WaitlistEntry;
     });
   }

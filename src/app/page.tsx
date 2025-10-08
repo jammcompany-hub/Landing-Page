@@ -12,6 +12,7 @@ import { InfiniteMovingCards } from "@/components/ui/infinite-moving-cards";
 export default function Home() {
   const words = ["Time.", "Community."];
   const [email, setEmail] = useState("");
+  const [school, setSchool] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState("");
   const [submitStatus, setSubmitStatus] = useState<"success" | "error" | null>(null);
@@ -30,7 +31,7 @@ export default function Home() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, school }),
       });
 
       const data = await response.json();
@@ -39,6 +40,7 @@ export default function Home() {
         setSubmitStatus("success");
         setSubmitMessage(data.message);
         setEmail(""); // Clear the form
+        setSchool("");
       } else {
         setSubmitStatus("error");
         setSubmitMessage(data.message);
@@ -246,6 +248,15 @@ export default function Home() {
               placeholder="your@email.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              required
+              disabled={isSubmitting}
+              className="rounded-lg border border-[#FFE066] focus:ring-2 focus:ring-[#FFE066] w-full mt-4 bg-[#0B0B45]/80 text-white placeholder:text-neutral-400 px-4 py-3 transition-shadow focus:shadow-[0_0_0_2px_#FFE06655] disabled:opacity-50 disabled:cursor-not-allowed"
+            />
+            <input
+              type="school"
+              placeholder="Your school"
+              value={school}
+              onChange={(e) => setSchool(e.target.value)}
               required
               disabled={isSubmitting}
               className="rounded-lg border border-[#FFE066] focus:ring-2 focus:ring-[#FFE066] w-full mt-4 bg-[#0B0B45]/80 text-white placeholder:text-neutral-400 px-4 py-3 transition-shadow focus:shadow-[0_0_0_2px_#FFE06655] disabled:opacity-50 disabled:cursor-not-allowed"

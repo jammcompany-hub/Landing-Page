@@ -22,5 +22,12 @@
     "email": "test2@example.com",
     "subscribedAt": "2025-09-06T18:47:12.280Z",
     "isActive": true
+  },
+  {
+    "id": "1757447676463",
+    "email": "shah@randome.com",
+    "subscribedAt": "2025-09-09T19:54:36.463Z",
+    "isActive": true,
+    "school": "central conn state unieoery"
   }
 ]
